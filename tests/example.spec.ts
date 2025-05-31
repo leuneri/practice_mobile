@@ -1,9 +1,15 @@
-import { test, expect } from '@playwright/test';
 import dotenv from 'dotenv';
+import { test } from '@playwright/test';
+import { LoginPage } from '../page-models/loginPage';
+import { PersonalBoard } from '../page-models/personalBoard';
 dotenv.config()
 
-  test('Go into Whiteboard link and make new whiteboard', async ({ page }) => {
-
+test.describe('Board testing', () => {
+  test.beforeEach(async ({ page }) => {
+    let loginPage: LoginPage;
+    let personalBoard: PersonalBoard;
+    loginPage = new LoginPage(page)
+    personalBoard = new PersonalBoard(page);
     const username = process.env.GOOGLE_USERNAME;
     const password = process.env.GOOGLE_PASSWORD;
     await page.goto('https://www.whiteboard.team/');
@@ -12,15 +18,18 @@ dotenv.config()
     // need to sign in
     await page.locator('#authButton').click(),
     await page.waitForLoadState();
-    await expect(page.locator('input[placeholder="email"]')).toBeVisible();
-    await expect(page.locator('input[placeholder="Password"]')).toBeVisible();
-    await page.locator('input[placeholder="email"]').fill(username!);
-    await page.locator('input[placeholder="Password"]').fill(password!);
-    await page.getByRole('button', { name: 'Log in' }).click();
-    
+    loginPage.enterEmail(username!);
+    loginPage.enterPassword(password!);
+    loginPage.clickLogin();
     await page.waitForLoadState();
-    await expect(page).toHaveTitle('Whiteboard Team')
-    await page.getByRole('button', { name: 'New' }).click();
-  // TODO: setup where we create a new notebook every time
-  // await expect(signInPopup.getByTestId('Untitled Notebook-libraryThumbnailImage')).toBeVisible();
-});
+    personalBoard.expectOnPersonalBoard();
+  });
+
+  test.afterEach(async ({ page }) => {
+    let personalBoard: PersonalBoard;
+    personalBoard = new PersonalBoard(page);
+    personalBoard.deleteAllBoards();
+  });
+
+
+})
