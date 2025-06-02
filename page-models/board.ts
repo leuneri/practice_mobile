@@ -1,9 +1,6 @@
-import { Page } from '@playwright/test'
+import { expect, Page } from '@playwright/test'
 
 export class Board {
-    locator(arg0: string): any {
-      throw new Error('Method not implemented.');
-    }
     readonly page: Page
 
     constructor(page: Page){
@@ -11,6 +8,8 @@ export class Board {
     }
 
     async clickStartFromScratch(): Promise<void> {
-        await this.page.getByText('Start From Scratch').click();
+        const startFromScratchButton = this.page.getByText('Start From Scratch');
+        await expect(startFromScratchButton).toBeVisible();
+        await startFromScratchButton.click();
     }
 }
