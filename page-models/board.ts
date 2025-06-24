@@ -1,10 +1,12 @@
-import { expect, Page } from '@playwright/test'
+import { expect, Page, Locator } from '@playwright/test'
 
 export class Board {
-    readonly page: Page
+    readonly page: Page;
+    readonly penType: Locator;
 
     constructor(page: Page){
-        this.page = page
+        this.page = page;
+        this.penType = page.locator('#penTypeTb');
     }
 
     async clickStartFromScratch(): Promise<void> {

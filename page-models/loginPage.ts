@@ -12,6 +12,7 @@ export class LoginPage {
         this.forgotPasswordButton = page.getByRole('link', { name: 'Forgot password' });
         this.createAccountButtonAfterError = page.getByRole('link', { name: 'create account' }).first();
         this.mainPageButton = page.getByText('Whiteboard Team');
+        this.createAccountButtonGeneral = page.getByRole('button', { name: 'Create Account' })
     }
 
     async enterEmail(email: string): Promise<void> {
@@ -24,6 +25,12 @@ export class LoginPage {
 
     async clickLogin(): Promise<void> {
         await this.page.getByRole('button', { name: 'Log in' }).click();
+    }
+
+    async login(email: string, password: string): Promise<void> {
+        await this.enterEmail(email);
+        await this.enterPassword(password);
+        await this.clickLogin();
     }
 
     async invalidLoginErrorHandlingCheck(): Promise<void> {

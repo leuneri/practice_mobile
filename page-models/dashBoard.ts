@@ -18,12 +18,13 @@ export class DashBoard {
             await deleteButton.click();
             const confirmDelete = this.page.getByRole('button', { name: 'Yes' });
             await expect(confirmDelete).toBeVisible();
-            await confirmDelete.click(); 
+            await confirmDelete.click();
+            if (await this.page.locator('[title="Delete"]').count() === 0) return;
         }
     }
 
     async clickNewBoard(): Promise<void> {
         const newButton = this.page.getByRole('button', { name: 'New'});
-        newButton.click();
+        await newButton.click();
     }
 }
